@@ -7,6 +7,13 @@ use Auth;
 
 class SessionsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('guest',[
+            'only' => ['create']
+        ]);
+    }
+
 	/**
 	 * 登录页面
 	 * @return [type] [description]
@@ -32,7 +39,9 @@ class SessionsController extends Controller
     	//attempt 企图 视图 攻击  flash 反射、闪光 flush 激动 面红 萌芽 奔流 
     	if( Auth::attempt( $credentials,$request->has('remember') ) ){
     		session()->flash('success','欢迎回来！');
-    		return redirect()->route('users.show',[Auth::user()]);
+
+            //intended 登录成功后进入用户之前访问的页面
+    		return redirect()->intended(route('users.show',[Auth::user()]));
     	}else{
     		session()->flash('danger','很抱歉，您的邮箱和密码不匹配');
     		
