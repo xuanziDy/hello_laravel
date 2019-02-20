@@ -5,12 +5,14 @@
     <link rel="stylesheet" href="/css/app.css">
   </head>
   <body>
-    @include('layouts._header');
+    @include('layouts._header')
 
     <div class="container">
-      @include('shared._messages');
+      @include('shared._messages')
       @yield('content')
       @include('layouts._footer')
-    </div>    
+    </div>
+
+    <script src="/js/app.js"></script>    
   </body>
 </html>
