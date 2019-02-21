@@ -38,16 +38,20 @@ class SessionsController extends Controller
 
     	//attempt 企图 视图 攻击  flash 反射、闪光 flush 激动 面红 萌芽 奔流 
     	if( Auth::attempt( $credentials,$request->has('remember') ) ){
-    		session()->flash('success','欢迎回来！');
-
-            //intended 登录成功后进入用户之前访问的页面
-    		return redirect()->intended(route('users.show',[Auth::user()]));
+            if( Auth::user()->activated ){
+                session()->flash('success','欢迎回来！');
+                //intended 登录成功后进入用户之前访问的页面
+                return redirect()->intended(route('users.show',[Auth::user()]));
+            }else{
+                Auth::logout();
+                session()->flash('warning','你的账号未激活，请检查邮箱中的注册邮件进行激活。');
+                return redirect('/');
+            }
     	}else{
     		session()->flash('danger','很抱歉，您的邮箱和密码不匹配');
     		
     		// 失败后，应该返回上一页面，保留上次输入，但不应该携带密码
     		// return redirect()->back(); //不生效
-    		
     		return back()->withInput();
     	}
     }
